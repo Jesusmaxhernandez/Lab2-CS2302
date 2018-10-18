@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Oct 17 20:57:02 2018
+
+@author: JesusMHernandez
+"""
+
+#f = open("10-million-combos.txt", "r")
+#print(f.read())
+
+
+class Node:
+    password =""
+    count = -1
+    next = None
+    def __init__(self, password, count, next):
+        self.password = password
+        self.next = next
+
+def printList(llist):
+    while llist is not None:
+        print(llist.password)
+        llist = llist.next
+
+def inList(llist, password):
+    temp = llist
+    while temp is not None:
+        if(temp.password == password):
+            temp.count += 1
+            return True
+        temp = temp.next
+    return False
+
+def lLength(llist):
+    count = 0
+    while llist is not None:
+        count += 1
+        llist = llist.next
+    return count
+
+def mergeSort(llist):
+    if llist == None or llist.next == None:
+        return llist
+    length = lLength(llist)
+    pivot = length//2
+    temp = llist
+    for i in range(pivot - 1):
+        temp = temp.next
+    
+    llist2 = temp.next
+    temp.next = None
+    
+    sList1 = mergeSort(llist) 
+
+    sList2 = mergeSort(llist2)
+    
+    if(sList1.password > sList2.password):
+        mList = sList1
+        sList1 = sList1.next
+    else:
+        mList = sList2
+        sList2 = sList2.next
+    temp = mList
+    while sList1 is not None and sList2 is not None:        
+        if(sList1.password > sList2.password):
+            temp.next = sList1
+            sList1 = sList1.next
+        else:
+            temp.next = sList2
+            sList2 = sList2.next
+        temp = temp.next
+        
+    while sList1 is not None:
+        temp.next = sList1
+        sList1 = sList1.next
+        temp = temp.next 
+        
+    while sList2 is not None:
+        temp.next = sList2
+        sList2 = sList2.next
+        temp = temp.next 
+    
+    return mList
+
+temp = None   
+  
+with open('test.txt') as f:
+    for line in f:
+        info = line.split('\t')
+        password = info[1]
+        if not inList(temp, password): 
+            temp = Node(password, 1, temp)
+root = temp
+
+mList = mergeSort(root)
+printList(mList)
+
