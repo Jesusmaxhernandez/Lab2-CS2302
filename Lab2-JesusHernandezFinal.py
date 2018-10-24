@@ -39,6 +39,7 @@ def inList(llist, password):
     while tempPass is not None:
         if(tempPass.password == password):
             tempPass.count += 1
+            return True
             #print(tempPass.count)
             
         tempPass = tempPass.next  
