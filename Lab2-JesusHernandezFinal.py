@@ -7,7 +7,6 @@
 #prints the top 20 most used passwords
 """
 Created on Wed Oct 17 20:57:02 2018
-
 @author: JesusMHernandez
 """
 
@@ -39,6 +38,7 @@ def inList(llist, password):
     while tempPass is not None:
         if(tempPass.password == password):
             tempPass.count += 1
+            return True
             #print(tempPass.count)
             
         tempPass = tempPass.next  
@@ -72,11 +72,34 @@ def lLength(llist):
         count += 1
         llist = llist.next
     return count
-#sorts linked list in descending order
+#sorts linked list in descending order using Bubble Sort 
+def bubbleSort(llist):
+    #If list empty return none
+    if llist is None:
+        return None
+    #Checks if the linked list has been swapped yet
+    swapped = True 
+    
+    while swapped is True:
+        swapped = False
+        temp = llist
+        while temp.next is not None:
+            if temp.password < temp.next.password:
+                #simple swap function
+                swapped = True
+                swap = temp.password
+                temp.password = temp.next.password
+                temp.next.password = swap
+            temp = temp.next
+    printList(llist)
+
+    return
+#sorts linked list in descending order (a-A-1)
 def mergeSort(llist):
     if llist == None or llist.next == None:
         return llist
     length = lLength(llist)
+    #Gets the middle for the pivot
     pivot = length//2
     temp = llist
     for i in range(pivot - 1):
@@ -88,7 +111,7 @@ def mergeSort(llist):
     sList1 = mergeSort(llist) 
 
     sList2 = mergeSort(llist2)
-    
+    #sorts the list
     if(sList1.password > sList2.password):
         mList = sList1
         sList1 = sList1.next
@@ -96,6 +119,7 @@ def mergeSort(llist):
         mList = sList2
         sList2 = sList2.next
     temp = mList
+    
     while sList1 is not None and sList2 is not None:        
         if(sList1.password > sList2.password):
             temp.next = sList1
@@ -104,32 +128,40 @@ def mergeSort(llist):
             temp.next = sList2
             sList2 = sList2.next
         temp = temp.next
-        
+  #merges the two lists back into one      
     while sList1 is not None:
         temp.next = sList1
         sList1 = sList1.next
         temp = temp.next 
-        
+    
     while sList2 is not None:
         temp.next = sList2
         sList2 = sList2.next
         temp = temp.next 
     
     return mList
-
+#Main
 temp = None   
 #opens file and inserts passwords in linked list   
-with open('10-million-combos.txt') as f:
+with open('test.txt') as f:
     for line in f:
         info = line.split('\t')
         password = info[1]
-#       temp = Node(password, 1, temp)
+        temp = Node(password, 1, temp)
         if not inList(temp, password): 
             temp = Node(password, 1, temp)
             
 root = temp
-mList = mergeSort(root)
+
+#comment out to implement merge sort
+#mList = mergeSort(root)
+
+#comment out to implement bubble sort
+mList = bubbleSort(root)
+
 #Prints linked list in descending order
-#printList(mList)
+printList(mList)
+
 #Prints 20 most common passwords
-popular(mList)
+popular(temp)
+
